@@ -1,0 +1,2 @@
+add_lunch_combo lineage_M6T-userdebug
+add_lunch_combo lineage_M6T-eng
