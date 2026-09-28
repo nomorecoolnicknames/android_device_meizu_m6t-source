@@ -1,0 +1,14 @@
+# Placeholder vendor sepolicy for M6T.
+#
+# The build is androidboot.selinux=permissive and SELINUX_IGNORE_NEVERALLOWS is
+# on. Two pieces of evidence, neither of them speculation:
+#   FACT: the FACTORY boot image of this device already boots permissive - its
+#     cmdline is `bootopt=64S3,32N2,64N2 androidboot.selinux=permissive`
+#     (header parse of /srv/forge/m6t-dump/boot.img).
+#   FACT: the sibling M6 lane had to disable build-time neverallow assertions for
+#     this exact blob family one Android release earlier ("Pie public-policy
+#     neverallows reject Oreo-era MTK vendor rules"), and A13's policy is
+#     stricter than Pie's.
+#
+# Nothing real can be written here until an M6T exists and boots far enough to
+# produce a single avc denial.

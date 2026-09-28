@@ -1,0 +1,91 @@
+# vendor.prop - Meizu M6T (M6T / M811H), MT6750, LineageOS 20 (Android 13).
+# Lands in /vendor/build.prop (TARGET_VENDOR_PROP, BoardConfig.mk).
+#
+# Created 2026-09-25 with the Treble conversion (branch lineage-20-treble,
+# report meizu-fleet/designs/TREBLE_M6_M6T_20260924.md). The first blocks are
+# MOVED VERBATIM from system.prop - they describe the vendor side (panel, RIL,
+# hw module suffixes, AEE), and a Treble system image must not carry them.
+# The last block is new.
+
+# FACT: ro.sf.lcd_density=320 in the device's own factory build.prop
+# (/srv/forge/m6t-dump/system/build.prop). Panel is 720x1440 (BoardConfig.mk).
+ro.sf.lcd_density=320
+
+# INFERENCE from M6 and from the shared MTK blob set (721 of 744 M6 blob entries
+# matched the M6T dump, M6T_DUMP_ANALYSIS §7): the RIL argument string contains a
+# space, so it cannot go through PRODUCT_PROPERTY_OVERRIDES.
+rild.libpath=mtk-ril.so
+rild.libargs=-d /dev/ttyC0
+# Android 13's rild reads the vendor.-prefixed name (PRODUCT_COMPATIBLE_PROPERTY
+# is forced true; FACT on m95 2026-09-24: without it rild sat in "RIL_Init
+# starting sleep loop"). The library is given on the ril-daemon-mtk command
+# line (-l, init.M6T.modem.rc), deliberately NOT as vendor.rild.libpath:
+# the AOSP vendor.ril-daemon would then load a second mtk-ril.so.
+vendor.rild.libargs=-d /dev/ttyC0
+
+# ---------------------------------------------------------------------------
+# hw module selection. INFERENCE from M6: the common device tree is an MT6755
+# donor while the silicon is branded MT6750, so hw_get_module() has to be told
+# which variant suffix to try first. FACT that this is the right suffix for M6T
+# specifically: ro.board.platform=mt6750 in the factory build.prop, and the
+# stock blobs are named *.mt6750.so.
+#
+# NOTE the asymmetry copied deliberately from the M6 LOS16 build that actually
+# boots: gralloc is mt6750 but hwcomposer is mt6755. It looks like a typo and is
+# not.
+# ---------------------------------------------------------------------------
+ro.hardware.gralloc=mt6750
+ro.hardware.hwcomposer=mt6755
+ro.hardware.audio.primary=mt6750
+ro.hardware.camera=mt6750
+ro.hardware.gps=mt6750
+ro.hardware.lights=mt6750
+ro.hardware.keystore=mt6750
+ro.hardware.gatekeeper=mt6750
+
+# ro.hardware.bluetooth is DELIBERATELY NOT SET - the two sibling lanes disagree
+# (LOS16 M6 says blueangel, LOS15.1 M6 says default because "stock blueangel
+# aborts in interop_database_add"), neither was ever tested on M6T, and nothing
+# has been tested on A13.
+
+# ROTATION: 0, and this one deserves a warning rather than a value.
+# FACT: the M6T defconfig sets CONFIG_MTK_LCM_PHYSICAL_ROTATION_HW=y (recorded in
+#   the existing M6T BoardConfig.mk as "FACT").
+# FACT: on the M6 the same setting was measured to CAUSE an upside-down UI rather
+#   than fix one, and was reverted on 2026-08-03 - _HW is a real hardware 180 flip
+#   in the display path (ddp_ovl.c:603, primary_display.c:5165,
+#   mtk_disp_mgr.c:1400) that only makes sense for a 180-mounted panel.
+# HYPOTHESIS: M6T's panel mounting is unknown. If the first boot on real hardware
+#   shows an inverted UI, the lever is the KERNEL (_HW and
+#   CONFIG_MTK_LCM_PHYSICAL_ROTATION), not this property - and note that with
+#   _HW=y the string "180" and "0" are identical, because color20/Makefile:63-67
+#   defines LCM_PHYSICAL_ROTATION_180 for either.
+ro.sf.hwrotation=0
+
+# Keep MTK AEE/ipanic dumps enabled - expdb is one of very few post-mortem
+# channels this family has, and on a device with no UART and no owner in the room
+# it may be the only one (meizu-fleet/DEBUG_WITHOUT_UART.md).
+persist.mtk.aee.aed=on
+
+# ---------------------------------------------------------------------------
+# New with Treble.
+# ---------------------------------------------------------------------------
+
+# m95 lesson 4. FACT: once ro.treble.enabled=true, Build.isBuildConsistent()
+# runs VintfObject.verifyWithoutAvb(), including the kernel check
+# (frameworks/base core/java/android/os/Build.java:1254). FCM 3 knows kernels
+# from 4.4 up; both M6T kernels are 3.18 (3.18.140 prebuilt, 3.18.35 stock),
+# so every boot would fail it with "No kernel entry found" and show the
+# "internal problem with your device" dialog.
+# frameworks/base branch meizu-legacy-vendor (2b2698c85a72) skips only the
+# RuntimeInfo (kernel) part when this is true; HAL/manifest checks stay on.
+ro.vendor.vintf.legacy_kernel=true
+
+# The primary audio HAL is built with the Android 7 audio.h (stock sdk 24,
+# lineage_meizu_m6.mk). hardware/interfaces branch meizu-legacy-kernel
+# (a0acaebde) shifts every audio_hw_device field from get_microphones() on
+# for such a HAL; without it AudioFlinger's getMasterMute() runs the blob's
+# create_audio_patch() (m95 GSI tombstone). HYPOTHESIS for M6T: same layout,
+# because both are pre-Android-9 audio.h - falsified by a tombstone in
+# audio.service on the first boot.
+ro.vendor.audio.legacy_nougat_abi=1
