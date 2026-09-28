@@ -1,0 +1,7 @@
+# Байт-патч размера new GraphicBuffer в N-блобах (shims/graphicbuffer.cpp): N 232/136 -> A13 256/160.
+# Сгенерировано meizu-fleet/tools/treble-gbuf-sites.py, только путь дисплея (libui_ext; hwcomposer).
+# Применяет treble-import-blobs.py --bytepatch (старые байты сверяются). Камера/OMX — не здесь.
+lib64/libui_ext.so 0x6254 001d8052 00208052   # new(232)->new(256) перед _ZN7android13GraphicBufferC1Ejjij в 0x6270
+lib64/libui_ext.so 0x6384 001d8052 00208052   # new(232)->new(256) перед _ZN7android13GraphicBufferC1Ejjij в 0x63a4
+lib/libui_ext.so 0x51cc 8820 a020   # new(136)->new(160) перед _ZN7android13GraphicBufferC1Ejjij в 0x51e6
+lib/libui_ext.so 0x5298 8820 a020   # new(136)->new(160) перед _ZN7android13GraphicBufferC1Ejjij в 0x52b0

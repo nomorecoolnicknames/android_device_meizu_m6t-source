@@ -1,0 +1,136 @@
+# сгенерировано meizu-fleet/tools/treble-shim-wiring.py; применяет treble-import-blobs.py --wiring
+# = прогон 1 (16:10, 129/128 файлов) + прогон 2 (18:30, после правки разрядности bin/* и
+#   --sys-provider libandroid_net, с librilutils/libril образа) поверх копий прогона 1.
+bin/aal -libskia.so
+bin/mtk_agpsd +libM6Tshim_ssl.so +libandroid_net.so -libandroid.so
+bin/nvram_agent_binder +libM6Tshim_utils.so
+bin/program_binary_builder +libutilscallstack.so
+bin/thermal +libM6Tshim_net.so
+bin/thermalindicator +libM6Tshim_sf.so
+lib/drm/libdrmctaplugin.so -libandroid_runtime.so -libdrmframework.so -libicui18n.so -libicuuc.so
+lib/drm/libdrmmtkplugin.so -libicui18n.so -libicuuc.so
+lib/egl/libGLES_mali.so +libutilscallstack.so libui.so=libM6Tshim_region.so
+lib/hw/audio.primary.mt6750.so +libM6Tshim_audioutils.so -libmedia.so
+lib/hw/gralloc.mt6750.so +libM6Tshim_utils.so +libutilscallstack.so
+lib/hw/hwcomposer.mt6755.so +libM6Tshim_gui.so +libM6Tshim_ui.so
+lib/libMtkOmxVdecEx.so +libM6Tshim_ui.so -libstagefright.so
+lib/libRSDriver_mtk.so +libM6Tshim_ui.so
+lib/libaal.so +libM6Tshim_sf.so
+lib/libacdk.so +libM6Tshim_utils.so
+lib/libamrvt.so -libnativehelper.so
+lib/libatvctrlservice.so +libM6Tshim_audioutils.so
+lib/libaudio_param_parser.so +libM6Tshim_audioutils.so -libicuuc.so -libmedia.so
+lib/libaudiocompensationfilter.so +libM6Tshim_audioutils.so -libmedia.so -libnativehelper.so
+lib/libaudiocomponentengine.so +libutilscallstack.so -libnativehelper.so
+lib/libaudiodcrflt.so -libnativehelper.so
+lib/libaudiomtkdcremoval.so -libnativehelper.so
+lib/libaudiosetting.so -libnativehelper.so
+lib/libbessound_hd_mtk.so -libnativehelper.so
+lib/libblisrc.so -libnativehelper.so
+lib/libblisrc32.so -libnativehelper.so
+lib/libc2kril.so +libM6Tshim_utils.so
+lib/libcam.camadapter.so +libutilscallstack.so -libskia.so
+lib/libcam.camnode.so +libM6Tshim_ui.so
+lib/libcam.client.so +libM6Tshim_ui.so
+lib/libcam.common.meizu.so +libM6Tshim_ui.so
+lib/libcam_utils.so +libM6Tshim_gui.so +libM6Tshim_ui.so +libM6Tshim_utils.so +libutilscallstack.so
+lib/libcharon.so -libnetd_client.so
+lib/libcustom_prop.so -libnativehelper.so
+lib/libcvsd_mtk.so -libnativehelper.so
+lib/libeffecthal.base.so +libM6Tshim_gui.so +libM6Tshim_ui.so
+lib/libem_audio_jni.so +libM6Tshim_audioutils.so
+lib/libem_modem_jni.so -libnativehelper.so
+lib/libfeatureio.cfb.so -libmedia.so
+lib/libfeatureio.jpg.so -libmedia.so
+lib/libfmjni.so -libmedia.so
+lib/libgui_ext.so +libM6Tshim_gui.so +libM6Tshim_sf.so +libM6Tshim_ui.so
+lib/libimsma.so -libmedia.so -libstagefright.so
+lib/libimsma_rtp.so -libmedia.so -libskia.so -libstagefright.so
+lib/libjni_lomoeffect.so +libM6Tshim_gui.so +libM6Tshim_ui.so
+lib/libmal_rilproxy.so +libM6Tshim_utils.so
+lib/libmatv_cust.so -libnativehelper.so
+lib/libmpbase.so -libandroid.so
+lib/libmsbc_mtk.so -libnativehelper.so
+lib/libmtk_vt_service.so +libM6Tshim_gui.so
+lib/libmtklimiter.so -libnativehelper.so
+lib/libmtkplayer.so -libmedia.so
+lib/libmtkshifter.so -libnativehelper.so
+lib/libperfservice.so +libM6Tshim_sf.so
+lib/libperfservicenative.so -libnativehelper.so
+lib/libpqservice.so +libM6Tshim_utils.so
+lib/librilmtk.so +libM6Tshim_utils.so
+lib/librilmtkmd2.so +libM6Tshim_utils.so
+lib/librilproxy.so +libM6Tshim_utils.so
+lib/librpcril.so +libM6Tshim_utils.so
+lib/libshowlogo.so +libM6Tshim_gui.so +libM6Tshim_sf.so +libM6Tshim_ui.so
+lib/libsink.so +libM6Tshim_gui.so
+lib/libsource.so +libutilscallstack.so
+lib/libtimestretch.so -libnativehelper.so
+lib/libtouchfilter.so -libinput.so
+lib/libui_ext.so +libM6Tshim_ui.so
+lib/libvfb_render.so +libM6Tshim_gui.so +libM6Tshim_ui.so
+lib/libviatelecom-withuim-ril.so +libM6Tshim_net.so
+lib/libvoicerecognition.so +libM6Tshim_audioutils.so
+lib/libvtmal.so +libM6Tshim_gui.so +libM6Tshim_ui.so
+lib/mtk-ril.so +libM6Tshim_net.so
+lib/mtk-rilmd2.so +libM6Tshim_net.so
+lib/mtk-rilproxy.so +libM6Tshim_utils.so +libutilscallstack.so
+lib64/drm/libdrmctaplugin.so -libandroid_runtime.so -libdrmframework.so -libicui18n.so -libicuuc.so
+lib64/drm/libdrmmtkplugin.so -libicui18n.so -libicuuc.so
+lib64/egl/libGLES_mali.so +libutilscallstack.so libui.so=libM6Tshim_region.so
+lib64/hw/audio.primary.mt6750.so +libM6Tshim_audioutils.so -libmedia.so
+lib64/hw/fingerprint.default.so -libkeystore_binder.so -libunwind.so
+lib64/hw/gralloc.mt6750.so +libM6Tshim_utils.so +libutilscallstack.so
+lib64/hw/hwcomposer.mt6755.so +libM6Tshim_gui.so +libM6Tshim_ui.so
+lib64/libRSDriver_mtk.so +libM6Tshim_ui.so
+lib64/libaal.so +libM6Tshim_sf.so
+lib64/libatvctrlservice.so +libM6Tshim_audioutils.so
+lib64/libaudio_param_parser.so +libM6Tshim_audioutils.so -libicuuc.so -libmedia.so
+lib64/libaudiocompensationfilter.so +libM6Tshim_audioutils.so -libmedia.so -libnativehelper.so
+lib64/libaudiocomponentengine.so +libutilscallstack.so -libnativehelper.so
+lib64/libaudiodcrflt.so -libnativehelper.so
+lib64/libaudiosetting.so -libnativehelper.so
+lib64/libbessound_hd_mtk.so -libnativehelper.so
+lib64/libblisrc.so -libnativehelper.so
+lib64/libblisrc32.so -libnativehelper.so
+lib64/libcam.camadapter.so +libutilscallstack.so -libskia.so
+lib64/libcam.camnode.so +libM6Tshim_ui.so
+lib64/libcam.client.so +libM6Tshim_ui.so
+lib64/libcam.common.meizu.so +libM6Tshim_ui.so
+lib64/libcam_utils.so +libM6Tshim_gui.so +libM6Tshim_ui.so +libM6Tshim_utils.so +libutilscallstack.so
+lib64/libcharon.so -libnetd_client.so
+lib64/libcustom_prop.so -libnativehelper.so
+lib64/libcvsd_mtk.so -libnativehelper.so
+lib64/libeffecthal.base.so +libM6Tshim_gui.so +libM6Tshim_ui.so
+lib64/libem_audio_jni.so +libM6Tshim_audioutils.so
+lib64/libem_modem_jni.so -libnativehelper.so
+lib64/libfeatureio.cfb.so -libmedia.so
+lib64/libfeatureio.jpg.so -libmedia.so
+lib64/libfmjni.so -libmedia.so
+lib64/libgoodixfingerprintd_binder.so +libM6Tshim_utils.so -libkeystore_binder.so -libprotobuf-cpp-lite.so -libunwind.so
+lib64/libgui_ext.so +libM6Tshim_gui.so +libM6Tshim_sf.so +libM6Tshim_ui.so
+lib64/libimsma.so -libmedia.so -libstagefright.so
+lib64/libimsma_rtp.so -libmedia.so -libskia.so -libstagefright.so
+lib64/libjni_lomoeffect.so +libM6Tshim_gui.so +libM6Tshim_ui.so
+lib64/libmal_rilproxy.so +libM6Tshim_utils.so
+lib64/libmatv_cust.so -libnativehelper.so
+lib64/libmpbase.so -libandroid.so
+lib64/libmsbc_mtk.so -libnativehelper.so
+lib64/libmtklimiter.so -libnativehelper.so
+lib64/libmtkplayer.so -libmedia.so
+lib64/libmtkshifter.so -libnativehelper.so
+lib64/libperfservice.so +libM6Tshim_sf.so
+lib64/libperfservicenative.so -libnativehelper.so
+lib64/libpqservice.so +libM6Tshim_utils.so
+lib64/librilmtk.so +libM6Tshim_utils.so
+lib64/librilmtkmd2.so +libM6Tshim_utils.so
+lib64/librilproxy.so +libM6Tshim_utils.so
+lib64/libsink.so +libM6Tshim_gui.so
+lib64/libsource.so +libutilscallstack.so
+lib64/libtimestretch.so -libnativehelper.so
+lib64/libtouchfilter.so -libinput.so
+lib64/libui_ext.so +libM6Tshim_ui.so
+lib64/libvfb_render.so +libM6Tshim_gui.so +libM6Tshim_ui.so
+lib64/mtk-ril.so +libM6Tshim_net.so
+lib64/mtk-rilmd2.so +libM6Tshim_net.so
+lib64/mtk-rilproxy.so +libM6Tshim_utils.so +libutilscallstack.so

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Framework overlay - Meizu M6T (M6T / M811H).
+
+  DELIBERATELY ALMOST EMPTY. There is no M6T hardware and therefore no measured
+  brightness curve, no measured panel behaviour, nothing. The existing LOS15.1
+  M6T tree has no core/res overlay either (its only overlay is
+  packages/apps/Camera2/res/values/config.xml). Copying M6's or m681's curves
+  onto an 18:9 panel of unknown make would be inventing data.
+
+  The two booleans below are device facts from the factory dump, not tuning:
+    config_showNavigationBar - the three hardware keys
+      (`mediatek,cap_touch@5d` + `cap_touch2@62`, 3 hw keys, M6T_DUMP_ANALYSIS §3)
+      are driven by a vendor blob stack this tree does not ship; without the
+      on-screen bar there would be no way back.
+    config_hotswapCapable - dual SIM with a hot-swappable tray.
+
+  Both names were checked against this tree's
+  frameworks/base/core/res/res/values/{config,symbols}.xml.
+-->
+<resources>
+    <bool name="config_showNavigationBar">true</bool>
+    <bool name="config_hotswapCapable">true</bool>
+</resources>

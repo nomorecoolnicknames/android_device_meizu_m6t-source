@@ -1,0 +1,32 @@
+# system.prop - Meizu M6T (M6T / M811H), MT6750, LineageOS 20 (Android 13)
+#
+# BENCH TREE - no M6T hardware exists in this project and nothing here has been
+# observed on a running device. Values are FACT about the factory dump
+# (/srv/forge/m6t-dump) or INFERENCE from the sibling M6, and say which.
+#
+# The ~60-key MTK modem block and the ~20-key debug.sf.* block that the existing
+# LOS15.1 M6T system.prop inherited from M6 are NOT copied. Every one of those
+# was set while debugging an Oreo display/RIL problem on an M6 body; carrying
+# them to a device that has never booted, on an Android version they were never
+# tested against, would be cargo cult twice over.
+
+#
+# 2026-09-25 (Treble): everything the VENDOR side owns - density, RIL, hw
+# module suffixes, rotation, AEE - moved verbatim to vendor.prop, which lands in
+# /vendor/build.prop. `ro.treble.enabled=false` is gone: the build now writes
+# ro.treble.enabled=true itself (build/make/core/main.mk:187).
+
+ro.forge.meizu.expect_codename=M6T
+
+# HWC enabled. INFERENCE from M6, where disabling it (disable_hwc=1 +
+# composition.type=gpu) was measured to cause system-wide UI lag because
+# SurfaceFlinger composited every layer on the GPU. Documented fallback if the
+# first M6T boot bootloops or glitches the panel: disable_hwc=1 +
+# debug.composition.type=gpu.
+debug.sf.disable_hwc=0
+
+# M6T has three hardware keys (FACT: the stock DTB declares
+# `mediatek,cap_touch@5d` + `cap_touch2@62` with 3 hw keys,
+# M6T_DUMP_ANALYSIS §3), but the key layout is delivered by a vendor blob stack
+# this tree does not ship, so keep the on-screen bar available.
+qemu.hw.mainkeys=0
