@@ -1,13 +1,19 @@
-# ReMeizu M6T: Android 9 source checkpoint
+# Meizu M6T: LineageOS 16.0
 
-This branch publishes the actual Android 9 device/common adaptation source from private development commit `2b059cbd72eabea6dc04093ba4a8a00c7191e4fb`. It is a source review checkpoint, not a downloadable ROM or a claim of successful boot. Original private development history is preserved; this public branch starts from an audited source export so private files are not present in ancestor commits.
+Device configuration, init rules, SELinux policy and compatibility code for Android 9.
+Place this tree at `device/meizu/M6T` in the matching LineageOS source tree.
 
-The tree contains product and board configuration, init/SELinux wiring and compatibility code. The Android 11/13 adaptation passed local static product/path/copy checks before publication; those checks did not compile a ROM or prove HAL/runtime compatibility. Android 9 branches retain their board-specific historical work and known integration blockers.
+The build requires the referenced common and MediaTek platform trees, matching kernel
+source/headers and prebuilt image where selected, and this board’s proprietary inputs.
+Use `proprietary-files.txt`, dependency manifests and kernel checks provided by this branch.
+Prebuilt firmware and complete ROM images are not supplied by this repository.
 
-## Inputs and status
+After providing those inputs, select `lunch lineage_M6T-userdebug`.
+These sources remain under development; compiling them does not certify all hardware
+or establish a tested installable release.
 
-Prebuilt kernels, shared libraries, compiled SELinux databases, firmware, stock archives and private operational evidence are deliberately absent. No vendor blobs or private Git history are included. `SOURCE_PROVENANCE.json` records exact upstream commit, source file hashes, exclusions and limited identifier redactions. Existing references to excluded inputs remain explicit and must be satisfied separately; they have not been replaced with success stubs.
+Retain the copyright and license notices in individual files.
 
-A complete Android build still requires the matching LineageOS platform, appropriate kernel source/build output and device-specific proprietary inputs. The snapshot alone is not a blob-free ROM build recipe. For open-source-only infrastructure, restrict jobs to selected openly licensed code, source checks and separately audited GPL kernel builds; do not run stock extraction or import firmware there. Retain existing per-file copyright and license notices; this export does not relicense inherited files.
-
-Historical notes may describe previous experiments. They do not certify the current branch on hardware. Common-tree board inheritance is not proof that M6, M3s, U10 or U20 have identical wiring.
+The default kernel route uses a prebuilt. `M6_KERNEL_FROM_SOURCE=true` selects the M6T
+source route, preferring the in-tree AArch64 GCC 4.9. If absent, set an absolute
+`M6T_KERNEL_CROSS_COMPILE_PREFIX` for that same toolchain.

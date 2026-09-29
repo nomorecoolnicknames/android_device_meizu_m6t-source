@@ -6,8 +6,7 @@ TARGET_MEIZU_MT675X_DEVICE := M6T
 
 include device/meizu/m3_meizu_m6-common/BoardConfigCommon.mk
 
-# PROPER-FIX: M6T factory geometry, not the inherited M6 layout.
-# /srv/forge/m6t-dump/boot.img SHA256 49aadf45...684c0f, stock scatter.
+# M6T uses its own factory boot geometry, not the M6 layout.
 TARGET_CPU_VARIANT := cortex-a53
 TARGET_SCREEN_WIDTH := 720
 TARGET_SCREEN_HEIGHT := 1440
@@ -114,13 +113,9 @@ ifeq ($(M6_KERNEL_FROM_SOURCE),true)
 TARGET_KERNEL_SOURCE := kernel/meizu/M6T/kernel-3.18
 TARGET_KERNEL_CONFIG := M6T_defconfig
 TARGET_KERNEL_ARCH := arm64
-# Toolchain: prefer the in-tree prebuilt so the source-kernel lane is
-# portable between the local host and west (which has no /srv/forge).
-# kernel.mk runs $(MAKE) -C $(KERNEL_SRC), so CROSS_COMPILE must be
-# ABSOLUTE - a tree-relative path would resolve against the kernel source
-# dir and fail. $(abspath ) is evaluated with make cwd == tree root.
-# The in-tree gcc is a python2 wrapper; the build container pins
-# python -> python2 (build-m6-16.sh), so it resolves there.
+# Prefer the in-tree AArch64 GCC 4.9 toolchain.
+# CROSS_COMPILE must be absolute because kernel.mk changes into the kernel source directory.
+# The legacy in-tree compiler wrapper requires Python 2.
 M6T_KERNEL_TC_INTREE := $(abspath prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin)/aarch64-linux-android-
 ifneq ($(wildcard $(M6T_KERNEL_TC_INTREE)gcc),)
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := $(M6T_KERNEL_TC_INTREE)
@@ -143,10 +138,4 @@ PRODUCT_COPY_FILES += \
     $(M6_DISPLAY_KERNEL_PREBUILT):kernel
 endif
 
-# Build Station: SurfaceFlinger vsync phase offsets — REMOVED 2026-06-21.
-# These were the prime bootloop suspect (handoff M6-HANDOFF-TODO.md §2.4) and were never
-# isolated. We are now enabling HWC (system.prop debug.sf.disable_hwc=0) to fix UI lag; to
-# keep ONE variable per CLAUDE.md §3 we test HWC with DEFAULT vsync (no offset) first.
-# If HWC boots cleanly but judders, re-introduce the -8000000 offsets below:
-#   SF_VSYNC_EVENT_PHASE_OFFSET_NS := -8000000
-#   VSYNC_EVENT_PHASE_OFFSET_NS := -8000000
+# Keep default SurfaceFlinger vsync offsets until the selected HWC/kernel combination is validated.
