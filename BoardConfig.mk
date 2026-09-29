@@ -120,7 +120,13 @@ M6T_KERNEL_TC_INTREE := $(abspath prebuilts/gcc/linux-x86/aarch64/aarch64-linux-
 ifneq ($(wildcard $(M6T_KERNEL_TC_INTREE)gcc),)
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := $(M6T_KERNEL_TC_INTREE)
 else
-TARGET_KERNEL_CROSS_COMPILE_PREFIX := /srv/forge/toolchains/aarch64-linux-android-4.9/bin/aarch64-linux-android-
+ifeq ($(strip $(M6T_KERNEL_CROSS_COMPILE_PREFIX)),)
+$(error Set M6T_KERNEL_CROSS_COMPILE_PREFIX to the absolute AArch64 GCC 4.9 prefix when the in-tree compiler is unavailable)
+endif
+ifeq ($(filter /%,$(strip $(M6T_KERNEL_CROSS_COMPILE_PREFIX))),)
+$(error M6T_KERNEL_CROSS_COMPILE_PREFIX must be an absolute AArch64 GCC 4.9 prefix)
+endif
+TARGET_KERNEL_CROSS_COMPILE_PREFIX := $(strip $(M6T_KERNEL_CROSS_COMPILE_PREFIX))
 endif
 BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 # Clear prebuilt vars so kernel.mk takes the FULL_KERNEL_BUILD path
