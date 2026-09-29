@@ -1,37 +1,4 @@
-# M6T (M811H) port, 2026-09-25: this file is the meizu_m6 draft (device/meizu/meizu_m6
-# d1e1ec9, audit meizu-fleet/designs/treble-m6-m6t/rootdir/INSTALL.txt) with names
-# meizu_m6 -> M6T. [DEV] citations of live:/stock: below are the M6's; the M6T stock
-# ramdisk (/srv/forge/m6t-dump/bootimg/ramdisk) was diffed against the M6 stock one and
-# only the differences listed in the design doc (§5.0) were applied. No M6T hardware.
-#
-# init.M6T.modem.rc — Meizu M6 modem on Android 13: md1 (GSM/WCDMA/LTE)
-# + md3 (C2K/CDMA) over the integrated eCCCI, and the RIL.
-# Installed as /vendor/etc/init/hw/init.M6T.modem.rc, imported by
-# init.mt6755.rc AFTER init.M6T.nvram.rc.
-#
-# DRAFT (treble-m6-m6t design lane, 2026-09-25). Not booted yet.
-# Tags as in init.mt6755.rc.
-#
-# The M6 is full-netcom like the MX6 (FACT, live:00-getprop and live:72-modem):
-#   ro.mtk_c2k_support=1, ro.mtk_enable_md3=1, mtk.eccci.c2k=enabled,
-#   ril.external.md=0, ro.boot.opt_md3_support=2, mtk.md3.status=ready,
-#   /dev/ccci_* and /dev/ccci3_* present, opt_md2_support=0 (no md2);
-#   running on stock: ccci_fsd, ccci_mdinit, ccci3_fsd, ccci3_mdinit,
-#   gsm0710muxd, ril-daemon-mtk, ril-proxy, viarild.
-#   Kernel: CONFIG_MTK_ECCCI_DRIVER=y, CONFIG_MTK_ECCCI_C2K=y
-#   (M6T_a13_defconfig:244-245).
-#
-# SERVICE NAMES ARE LOAD-BEARING — the 32-bit daemons chain-start each other
-# through hard-coded ctl.start/ctl.stop values (FACT, strings on the installed
-# blobs):
-#   ccci_mdinit -> "ccci_fsd", "ccci3_fsd", "gsm0710muxd", "gsm0710muxdmd2",
-#                  "ril-daemon-mtk", "ril-daemon-mtkmd2", "viarild",
-#                  "mdlogger", "emdlogger1..3"; watches init.svc.ril-proxy;
-#                  waits for service.nvram_init
-#   gsm0710muxd -> ctl.stop "ril-daemon", ctl.start "ril-daemon-mtk"
-# Do not rename. Layout and reasoning follow m95's A13 modem file
-# (m95:init.m95.modem.rc), which registers IRadio on the MX6 with the same
-# family of blobs.
+# M6T board init settings; preserve service identity and board-specific permissions.
 
 on post-fs-data
     # gsm0710muxd links its pty slaves under /dev/radio.

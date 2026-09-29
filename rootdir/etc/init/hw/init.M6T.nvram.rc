@@ -1,38 +1,4 @@
-# M6T (M811H) port, 2026-09-25: this file is the meizu_m6 draft (device/meizu/meizu_m6
-# d1e1ec9, audit meizu-fleet/designs/treble-m6-m6t/rootdir/INSTALL.txt) with names
-# meizu_m6 -> M6T. [DEV] citations of live:/stock: below are the M6's; the M6T stock
-# ramdisk (/srv/forge/m6t-dump/bootimg/ramdisk) was diffed against the M6 stock one and
-# only the differences listed in the design doc (§5.0) were applied. No M6T hardware.
-#
-# init.M6T.nvram.rc — MTK NVRAM (IMEI, RF calibration, Wi-Fi/BT MAC,
-# audio parameters) for the Meizu M6 on Android 13.
-# Installed as /vendor/etc/init/hw/init.M6T.nvram.rc, imported by
-# init.mt6755.rc BEFORE init.M6T.modem.rc.
-#
-# DRAFT (treble-m6-m6t design lane, 2026-09-25). Not booted yet.
-# Tags as in init.mt6755.rc.
-#
-# Why the modem depends on this file (FACT, blob strings):
-#   ccci_mdinit waits for service.nvram_init ("wait service.nvram_init=%s...
-#   timeout") and reads /data/nvram/APCFG/APRDCL/MD_SBP; ccci_fsd serves the
-#   modem file system out of /data/nvram/md and /data/nvram/md3;
-#   nvram_daemon is the one that sets service.nvram_init.
-#   m95 on A13: while NVRAM never became Ready, audio, ccci_mdinit, GPS and
-#   MAL all waited and the watchdog killed system_server in a loop
-#   [CONV m95:init.mt6797.rc:124-132].
-#
-# Layout choice. libnvram (lib and lib64) works on /data/nvram/* and also
-# knows /nvdata/* (blob:lib64/libnvram.so strings). On this device /nvdata is a
-# real partition (by-name/nvdata -> mmcblk0p6, 32 MiB, live:03-partitions),
-# and it is where the calibrated records live:
-#   - stock:   symlink /nvdata /data/nvram      (stock:init.mt6755.rc:159-165)
-#   - los16:   bind-mount /nvdata over /data/nvram (los16:init.nvdata.rc:1-48),
-#              because a symlink cannot replace an existing directory
-#              (comment at los16:init.nvdata.rc:9-11). That build had working
-#              dual-SIM telephony on REDACTED_UNIT.
-#   - m95:     plain mkdir /data/nvram, restored from the raw nvram partition.
-# The los16 bind mount is taken: same data as stock, proven on this handset,
-# and it does not depend on /data/nvram being absent.
+# M6T board init settings; preserve service identity and board-specific permissions.
 
 on post-fs-data
     # [DEV stock:init.mt6755.rc:159-160, los16:init.nvdata.rc:5-7]

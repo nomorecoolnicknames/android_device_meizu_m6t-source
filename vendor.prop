@@ -7,8 +7,7 @@
 # hw module suffixes, AEE), and a Treble system image must not carry them.
 # The last block is new.
 
-# FACT: ro.sf.lcd_density=320 in the device's own factory build.prop
-# (/srv/forge/m6t-dump/system/build.prop). Panel is 720x1440 (BoardConfig.mk).
+# 720x1440 display, density 320.
 ro.sf.lcd_density=320
 
 # INFERENCE from M6 and from the shared MTK blob set (721 of 744 M6 blob entries

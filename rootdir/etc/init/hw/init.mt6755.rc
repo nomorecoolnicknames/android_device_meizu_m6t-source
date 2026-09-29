@@ -1,47 +1,4 @@
-# M6T (M811H) port, 2026-09-25: this file is the meizu_m6 draft (device/meizu/meizu_m6
-# d1e1ec9, audit meizu-fleet/designs/treble-m6-m6t/rootdir/INSTALL.txt) with names
-# meizu_m6 -> M6T. [DEV] citations of live:/stock: below are the M6's; the M6T stock
-# ramdisk (/srv/forge/m6t-dump/bootimg/ramdisk) was diffed against the M6 stock one and
-# only the differences listed in the design doc (§5.0) were applied. No M6T hardware.
-#
-# init.mt6755.rc — Meizu M6 (M6T / M711), MT6750 silicon with
-# ro.hardware=mt6755 (androidboot.hardware=mt6755 on the LK cmdline,
-# live:01-cmdline). LineageOS 20 (Android 13), full Treble, real /vendor on
-# custom (p3). Installed as /vendor/etc/init/hw/init.mt6755.rc.
-#
-# DRAFT (treble-m6-m6t design lane, 2026-09-25). Not booted yet.
-#
-# Principles (taken from device/meizu/m95, the A13 port that reaches the
-# setup wizard):
-#  * A13 init imports only /vendor/etc/init/hw/init.${ro.hardware}.rc
-#    (los20 system/core/rootdir/init.rc:10) and auto-parses /vendor/etc/init/
-#    *.rc but NOT its hw/ subdirectory, so every sibling below is imported by
-#    its INSTALLED path. Root paths (/init.*.rc) do not exist after
-#    switch_root: the root is system.img.
-#  * A service is defined only if its binary is installed in /vendor by
-#    meizu-fleet/wt/device_M6T_treble/vendor-blobs.mk. Nougat paths
-#    /system/bin/X and /system/vendor/bin/X of vendor daemons become
-#    /vendor/bin/X.
-#  * Nothing is pasted wholesale from stock. What was left out, and why, is
-#    listed in INSTALL.txt next to this file — absence is a decision.
-#  * No seclabel lines: the tree has no vendor sepolicy yet
-#    (sepolicy/vendor/file.te is a placeholder) and the build is
-#    androidboot.selinux=permissive. On A13 a vendor daemon without a domain
-#    transition is then started in init's domain with a logged
-#    "has incorrect label or no domain transition" error
-#    (los20 system/core/init/service.cpp:90-99 — refusal only when enforcing).
-#
-# Evidence tags:
-#   [DEV]  fact of this device: stock Flyme 7.1.2.0G boot ramdisk
-#          ("stock:<file>:<line>", initrd sha256 3870bee6a464ac66...), the
-#          LOS 16.0 tree that booted REDACTED_UNIT ("los16:<file>:<line>",
-#          gunwest-import/m6rom16/rom-work/device/meizu/m3_M6T-common/
-#          rootdir unless another dir is named), the live capture
-#          M6T/captures/m6cap-20260725-1305 ("live:<file>"), strings of the
-#          installed blobs ("blob:<path>"), or the kernel source
-#          ("kernel:<path>", meizu-fleet/wt/kernel_M6T_ebpf/kernel-3.18).
-#   [CONV] convention carried from the m95 A13 port ("m95:<file>:<line>",
-#          los20/device/meizu/m95/rootdir).
+# M6T board init settings; preserve service identity and board-specific permissions.
 
 import /vendor/etc/init/hw/init.mt6755.usb.rc
 # nvram before modem: its post-fs-data bind mount of /nvdata over /data/nvram

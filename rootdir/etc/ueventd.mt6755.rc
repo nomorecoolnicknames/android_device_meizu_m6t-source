@@ -1,41 +1,4 @@
-# M6T (M811H) port, 2026-09-25: this file is the meizu_m6 draft (device/meizu/meizu_m6
-# d1e1ec9, audit meizu-fleet/designs/treble-m6-m6t/rootdir/INSTALL.txt) with names
-# meizu_m6 -> M6T. [DEV] citations of live:/stock: below are the M6's; the M6T stock
-# ramdisk (/srv/forge/m6t-dump/bootimg/ramdisk) was diffed against the M6 stock one and
-# only the differences listed in the design doc (§5.0) were applied. No M6T hardware.
-#
-# ueventd rules for the Meizu M6 (M6T / M711), MT6750 (ro.hardware=mt6755),
-# LineageOS 20 (Android 13), full Treble. Installed as /vendor/etc/ueventd.rc.
-#
-# DRAFT (treble-m6-m6t design lane, 2026-09-25). Not booted yet.
-#
-# Where this file is read on A13 (FACT, los20/system/core):
-#   rootdir/ueventd.rc:1   "import /vendor/etc/ueventd.rc"  -> this file.
-#   init/ueventd.cpp:300-310  /system/etc/ueventd.rc is canonical; the legacy
-#   /vendor/ueventd.rc, /odm/ueventd.rc and /ueventd.${ro.hardware}.rc are
-#   only added while ro.product.first_api_level < 33, and /ueventd.mt6755.rc
-#   would have to sit in the system-image root anyway (the boot ramdisk is
-#   gone after switch_root). So /vendor/etc/ueventd.rc is the one path that
-#   is always parsed.
-#   init/devices.cpp:274  permissions are searched from the LAST rule
-#   backwards: a later line (and this file, parsed after the AOSP one) wins.
-#
-# Why this file matters more than on a newer kernel (FACT):
-#   meizu-fleet/wt/kernel_M6T_ebpf/.../M6T_a13_defconfig has no
-#   CONFIG_DEVTMPFS, so EVERY /dev node is created by ueventd with the mode
-#   and owner from these rules; anything not listed here is root:root 0600.
-#
-# Evidence tags (same discipline as device/meizu/m95):
-#   [DEV]  fact of this device: stock Flyme 7.1.2.0G boot ramdisk
-#          (M6T/stock-flyme-7.1.2.0G/boot-unpacked/initrd.img, sha256
-#          3870bee6a464ac66...; cited as "stock:<file>:<line>"), the LOS 16.0
-#          tree that booted REDACTED_UNIT (gunwest-import/m6rom16/rom-work/
-#          device/meizu/m3_M6T-common/rootdir, cited as "los16:<file>:<line>"),
-#          the live capture M6T/captures/m6cap-20260725-1305 ("live:<file>"),
-#          strings of the blobs actually installed in /vendor ("blob:<path>"),
-#          or the M6 kernel source ("kernel:<path>").
-#   [CONV] convention carried over from the m95 A13 port
-#          (los20/device/meizu/m95/rootdir/ueventd.mt6797.rc, "m95:<line>").
+# M6T board init settings; preserve service identity and board-specific permissions.
 
 # ============================ subsystem rules ================================
 # m95 learned on Android 9 that without these the device black-screens

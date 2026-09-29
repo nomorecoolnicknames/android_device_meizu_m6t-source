@@ -29,13 +29,7 @@ PRODUCT_SOONG_NAMESPACES += \
 # No vendor/meizu/M6T tree exists in this workspace (see the blob note
 # further down); add it here together with that tree.
 
-# ---------------------------------------------------------------------------
-# Screen density
-#
-# FACT: ro.sf.lcd_density=320 in the device's own factory build.prop
-#   (/srv/forge/m6t-dump/system/build.prop). Panel is 720x1440 (BoardConfig.mk),
-#   so 320 dpi => xhdpi.
-# ---------------------------------------------------------------------------
+# 720x1440 display, density 320 (xhdpi).
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := xhdpi
 
@@ -100,38 +94,7 @@ PRODUCT_PACKAGES += \
     android.hardware.health@2.1-impl \
     android.hardware.health@2.1-service
 
-# ---------------------------------------------------------------------------
-# Feature declarations.
-#
-# THE HONEST RULE FOR THIS DEVICE: nothing has ever run on an M6T, so no feature
-# can be declared on the strength of observation. What IS declarable is what the
-# FACTORY DEVICE TREE says the hardware physically contains - that is evidence
-# about the board, not about our software.
-#
-# FACT, from the decompiled stock appended DTB (M6T_DUMP_ANALYSIS_2026-07-22.md §3):
-#   fingerprint  - `goodix,goodix-fp` node present (same Goodix family as M6's
-#                  GF3208 and m681's GF516M; the roadmap names the part GF3258
-#                  on EINT12);
-#   touchscreen  - `mediatek,cap_touch@5d` + `mediatek,cap_touch2@62`,
-#                  `mediatek,mt6755-touch`, 3 hardware keys;
-#   telephony    - dual SIM MTK modem stack in the stock build.prop.
-# FACT, from /srv/forge/m6t-dump: the Wi-Fi/BT combo blobs and firmware are
-#   present and are the same MTK WMT family as M6's.
-#
-# Deliberately NOT declared:
-#   android.hardware.camera*  - the biggest known gap. Stock compiles SIX sensor
-#                  drivers (imx278 hi846 ov13855 s5k4h7 gc2375 sp2509); our
-#                  kernel has four and one (s5k4h8) is the wrong chip; three are
-#                  in no local BSP. M6T is DUAL rear where M6 is single. On the
-#                  sibling M6, which HAS hardware, camera open still crashes.
-#   sensors       - the stock cust_* DTS block names epl259x / mpu6515g /
-#                  bmp280new / bma253 in nodes for which the stock kernel has NO
-#                  drivers, i.e. M6T probably has neither gyroscope nor
-#                  barometer. Declaring sensor features would be a guess in the
-#                  wrong direction.
-#   vibrator      - AW869X, no driver in any source we have (firmware blob is in
-#                  the dump, so the port is not data-blocked, only work-blocked).
-# ---------------------------------------------------------------------------
+# Publish only capabilities backed by the board configuration; feature XML does not itself prove working hardware.
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.bluetooth.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.bluetooth.xml \
     frameworks/native/data/etc/android.hardware.bluetooth_le.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.bluetooth_le.xml \
@@ -144,61 +107,8 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.wifi.direct.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.direct.xml \
     frameworks/native/data/etc/handheld_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/handheld_core_hardware.xml
 
-# ---------------------------------------------------------------------------
-# Vendor blobs - in the real /vendor image (Treble, 2026-09-25).
-#
-# Until 2026-09-24 this block explained why NO blobs were imported (a non-Treble
-# tree with no vendor partition, fleet rule TREES.md §3.4). With a real /vendor
-# the blobs ARE the vendor image, so they are imported - into this tree, not a
-# separate vendor/meizu/M6T (proprietary/ is in .gitignore; only the
-# generated makefile is versioned).
-#
-# vendor-blobs.mk is GENERATED from the M6T list of the LOS 16.0 workspace
-# (713 pairs; FACT: every one of the 713 source files is byte-identical to the
-# same path in the factory dump /srv/forge/m6t-dump/system - checked by content
-# 2026-09-25) plus the 4 files that tree declared as modules (librilmtk,
-# mtk-ril) plus 12 files taken straight from that dump, which the list - made
-# BY ANALOGY from M6 - never had although M6T blobs NEED them (model
-# treble_blob_audit.py): libimsg_log (teei_daemon, keystore/gatekeeper.mt6750),
-# libcamera_bokehutils (libcam.camnode/client/paramsmgr) and the two
-# libDepthBokehEffect{,Base} it NEEDs, libarcsoft_beautyshot and
-# libarcsoft_high_dynamic_range (libcam.camadapter), lib and lib64 each.
-# Not taken: libopenshort, libext4_utils - only the factory-mode `factory`
-# binary NEEDs them. Every destination - system/vendor/<x> AND system/<x> - becomes
-# $(TARGET_COPY_OUT_VENDOR)/<x>, as in vendor/meizu/m95/m95-vendor.mk:
-# FACT (report §4): the stock /system/lib* files in the list are HAL closure
-# (camera.mt6750 -> libmeizucamera, libcam.* -> libcam.common.meizu/arcsoft/
-# mpbase; the goodix FP stack), which a vendor process can only reach inside
-# /vendor.
-# Excluded: system/lib/libcurl.so - libcurl is VNDK-core, a /vendor copy would
-# shadow the VNDK one in every vendor process (m95 lesson 5, libbinder); and
-# vendor/lib{,64}/mediadrm/lib{drmclearkey,mockdrmcrypto}plugin.so - AOSP's own
-# reference plugins, which A13 builds to the same path and which a copy rule
-# would silently beat (fleet blob audit 2026-09-16, commit 27f353f; the first
-# `m nothing` of this branch warned "overriding commands" on exactly these).
-# Hard-coded paths: every /system/vendor/... string in the blobs keeps working,
-# because the A13 system image carries system/vendor -> /vendor (FACT,
-# out-m95 system/vendor symlink); no blob hard-codes a /system/lib* path of a
-# file that moved (treble-closure.py scan).
-#
-# Regenerate (from /srv/forge/android):
-#   R=gunwest-import/m6rom16/rom-work
-#   python3 meizu-fleet/tools/treble-import-blobs.py \
-#     --src-mk $R/vendor/meizu/M6T/M6T-vendor-blobs.mk --src-root $R \
-#     --src-prop $R/vendor/meizu/M6T/proprietary \
-#     --device-path device/meizu/M6T --out-mk <this dir>/vendor-blobs.mk \
-#     --copy-to los20/device/meizu/M6T/proprietary \
-#     --extra vendor/lib/librilmtk.so,vendor/lib64/librilmtk.so,vendor/lib/mtk-ril.so,vendor/lib64/mtk-ril.so \
-#     --extra2-root /srv/forge/m6t-dump/system \
-#     --extra2 vendor/lib/libimsg_log.so,vendor/lib64/libimsg_log.so,vendor/lib/libcamera_bokehutils.so,vendor/lib64/libcamera_bokehutils.so,lib/libarcsoft_beautyshot.so,lib64/libarcsoft_beautyshot.so,lib/libarcsoft_high_dynamic_range.so,lib64/libarcsoft_high_dynamic_range.so,vendor/lib/libDepthBokehEffect.so,vendor/lib64/libDepthBokehEffect.so,vendor/lib/libDepthBokehEffectBase.so,vendor/lib64/libDepthBokehEffectBase.so \
-#     --exclude libcurl.so,libdrmclearkeyplugin.so,libmockdrmcryptoplugin.so,init.mal.rc,init.wod.rc \
-#     --wiring <this dir>/shims/wiring.txt --bytepatch <this dir>/shims/bytepatch.txt \
-#     --prune --name vendor-blobs.mk
-# The copies in proprietary/ are therefore NOT the stock files: 128 carry
-# patched DT_NEEDED (shims/wiring.txt, model meizu-fleet/tools/
-# treble-shim-wiring.py) and libui_ext.so (lib, lib64) a patched operator new
-# size (shims/bytepatch.txt). SHA256SUMS holds the hashes of the patched copies.
-# ---------------------------------------------------------------------------
+# Install board-specific Nougat HALs and firmware in the real vendor partition.
+# Do not copy AOSP reference HALs over source-built implementations.
 $(call inherit-product, $(LOCAL_PATH)/vendor-blobs.mk)
 
 # ---------------------------------------------------------------------------
