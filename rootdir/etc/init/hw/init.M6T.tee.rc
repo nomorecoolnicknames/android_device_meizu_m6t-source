@@ -1,32 +1,4 @@
-# M6T (M811H) port, 2026-09-25: this file is the meizu_m6 draft (device/meizu/meizu_m6
-# d1e1ec9, audit meizu-fleet/designs/treble-m6-m6t/rootdir/INSTALL.txt) with names
-# meizu_m6 -> M6T. [DEV] citations of live:/stock: below are the M6's; the M6T stock
-# ramdisk (/srv/forge/m6t-dump/bootimg/ramdisk) was diffed against the M6 stock one and
-# only the differences listed in the design doc (§5.0) were applied. No M6T hardware.
-#
-# init.M6T.tee.rc — MicroTrust TEEI (soter) for the Meizu M6 on
-# Android 13. Installed as /vendor/etc/init/hw/init.M6T.tee.rc, imported
-# by init.mt6755.rc.
-#
-# DRAFT (treble-m6-m6t design lane, 2026-09-25). Not booted yet.
-# Tags as in init.mt6755.rc.
-#
-# This device is MicroTrust, not Trustonic like m95 (FACT):
-#   live:63-tee  ro.mtk_microtrust_tee_support=1, init.svc.teei_daemon=running,
-#                soter.teei.init=INIT_OK, /data/thh/tee_00..0F on stock;
-#   M6T_a13_defconfig:292 CONFIG_MICROTRUST_TEE_SUPPORT=y.
-# Who needs it: keymaster@3.0 over keystore.mt6750 (/dev/ut_keymaster), the
-# Goodix FP chain, IFAA. Node permissions are in ueventd.mt6755.rc (TEE block).
-#
-# Ordering. Stock starts teei_daemon `on fs` and creates /data/thh at
-# post-fs-data (stock:init.microtrust.rc:4-90). los16 moved everything to
-# post-fs-data — perms, then the /data/thh tree, then the daemon — and that
-# order is what reached soter.teei.init=INIT_OK and a working FP enumerate on
-# REDACTED_UNIT (los16 device/meizu/M6T/microtrust.rc:1-55). The kernel
-# side is one-shot per boot: init_teei_framework() runs once and a failed
-# soter load leaves every later TEE open timing out
-# (los16 microtrust.rc:9-14, kernel teei_client_main.c). The los16 order is
-# kept: /data/thh exists before the daemon ever runs, even on a wiped /data.
+# M6T board init settings; preserve service identity and board-specific permissions.
 
 on post-fs-data
     # [DEV stock:init.microtrust.rc:23-88, los16 microtrust.rc:32-52]

@@ -1,51 +1,5 @@
-# fstab.mt6755 - Meizu M6T (M6T / M811H), MT6750, LineageOS 20 / Android 13
-#
-# ###########################################################################
-# NOTHING IN THIS FILE HAS BEEN VERIFIED ON HARDWARE. There is no M6T in this
-# project (M6T_ROADMAP.md §1). The numbers below are derived from the factory
-# scatter; the derivation is spelled out so the next person can check it in one
-# adb command instead of trusting it.
-# ###########################################################################
-#
-# WHY THE FILE IS CALLED fstab.mt6755 ON A "mt6750" PHONE
-#   FACT: the stock M6T ramdisk ships fstab.mt6755 (M6T_DUMP_ANALYSIS_2026-07-22.md
-#   §4), and init looks the fstab up by ro.hardware. MT6750 is the down-binned
-#   MT6755 bin and the BSP is mt6755 (factbase §7). On the sibling M6 this is
-#   measured: [ro.hardware]: [mt6755].
-#
-# BLOCK-DEVICE MAP - DERIVATION
-#   FACT: /srv/forge/m6t-dump/scatter.txt lists the eMMC user-area partitions in
-#   this order (preloader/pgpt are not user-area; flashinfo/sgpt are tail
-#   markers):
-#     1 recovery, 2 para, 3 custom, 4 expdb, 5 frp, 6 nvdata, 7 proinfo,
-#     8 devinfo, 9 metadata, 10 protect1, 11 protect2, 12 seccfg,
-#     13 oemkeystore, 14 md1img, 15 md1dsp, 16 md1arm7, 17 md3img, 18 nvram,
-#     19 lk, 20 lk2, 21 boot, 22 logo, 23 tee1, 24 tee2, 25 secro,
-#     26 keystore, 27 rstinfo, 28 system, 29 cache, 30 userdata
-#   FACT: that name/order sequence is IDENTICAL to M6's scatter - diffing
-#   /srv/forge/m6t-dump/scatter.txt against
-#   /srv/forge/android/meizu_m6/stock-flyme-7.1.2.0G/scatter.txt shows 29 of 34
-#   lines differing in OFFSET and none in name or position.
-#   FACT: on M6, position 21 = boot is MEASURED on hardware (boot = mmcblk0p21,
-#   factbase §5.1, unit REDACTED_UNIT).
-#   INFERENCE: M6T therefore has boot = p21, system = p28, cache = p29,
-#   userdata = p30. Strong, but INFERENCE - one `ls -l /dev/block/platform/
-#   mtk-msdc.0/*/by-name/` on a real M6T settles it.
-#
-#   DO NOT COPY m681's fstab here. m681 is p22/p29/p30/p31; M6 and M6T are
-#   p21/p28/p29/p30. Getting this wrong mounts `keystore` as /system.
-#
-# WHY RAW NODES AND NOT by-name
-#   The stock M6T ramdisk uses by-name paths and the 3.18 kernel provides them.
-#   The by-name form is kept commented below. Raw nodes are the default because
-#   this tree is a placeholder for a future 4.19 kernel whose by-name behaviour
-#   is unknown, and because the neighbouring m681 4.4 has no by-name links at all
-#   (factbase:69).
-#
-# A13 first-stage init: entries flagged `first_stage_mount` are mounted before
-# switch_root; /system must be one of them (system/core/init/first_stage_mount.cpp:505-525).
-#
-# <src>                    <mnt_point>  <type>  <mnt_flags and options>                                           <fs_mgr_flags>
+# First-stage init mounts /system and custom-backed /vendor before switch_root.
+# Keep M6T factory partition identities.
 
 # FIRST-STAGE ENTRIES ARE by-name, NOT RAW - and this is not taste (2026-09-25).
 #   First-stage init waits for every first_stage_mount device by comparing

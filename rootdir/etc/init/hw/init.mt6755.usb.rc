@@ -1,25 +1,4 @@
-# M6T (M811H) port, 2026-09-25: this file is the meizu_m6 draft (device/meizu/meizu_m6
-# d1e1ec9, audit meizu-fleet/designs/treble-m6-m6t/rootdir/INSTALL.txt) with names
-# meizu_m6 -> M6T. [DEV] citations of live:/stock: below are the M6's; the M6T stock
-# ramdisk (/srv/forge/m6t-dump/bootimg/ramdisk) was diffed against the M6 stock one and
-# only the differences listed in the design doc (§5.0) were applied. No M6T hardware.
-#
-# init.mt6755.usb.rc — Meizu M6 (M6T), USB gadget for Android 13.
-# Installed as /vendor/etc/init/hw/init.mt6755.usb.rc, imported by
-# init.mt6755.rc.
-#
-# DRAFT (treble-m6-m6t design lane, 2026-09-25). Not booted yet.
-#
-# Gadget: legacy MTK android_usb composite, not configfs — CONFIG_USB_G_ANDROID=y
-# in M6T_a13_defconfig:446 and stock reports sys.usb.configfs=0
-# (live:00-getprop). adbd on A13 speaks only functionfs, so the ffs mount and
-# the f_ffs alias below are the whole adb story; without this file the generic
-# init.usb.rc selects the legacy f_adb function and the host sees an adb
-# interface with nobody behind it ("offline") [CONV m95:init.mt6797.usb.rc:4-11].
-#
-# Values (VID, PIDs, manufacturer) are the stock M6 ones [DEV
-# stock:init.mt6755.usb.rc], not m95's: e.g. mtp,adb is 0C02 here.
-# Tags as in init.mt6755.rc.
+# M6T board init settings; preserve service identity and board-specific permissions.
 
 on early-init
     # [CONV m95:init.mt6797.usb.rc:13-20] adbd reads this once, at start.

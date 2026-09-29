@@ -1,16 +1,4 @@
-# vendor-blobs.mk — N-блобы в настоящем /vendor (Treble), LineageOS 20.
-#
-# СГЕНЕРИРОВАНО meizu-fleet/tools/treble-import-blobs.py — не править руками,
-# перегенерировать (команда — в шапке device.mk, блок «Vendor blobs»).
-#
-# Источник: gunwest-import/m6rom16/rom-work/vendor/meizu/M6T/M6T-vendor-blobs.mk
-#   (713 пар src:dst боевого дерева LOS16) + модули LOS16: vendor/lib/librilmtk.so, vendor/lib64/librilmtk.so, vendor/lib/mtk-ril.so, vendor/lib64/mtk-ril.so.
-# Дополнительно из /srv/forge/m6t-dump/system: vendor/lib/libimsg_log.so, vendor/lib64/libimsg_log.so, vendor/lib/libcamera_bokehutils.so, vendor/lib64/libcamera_bokehutils.so, lib/libarcsoft_beautyshot.so, lib64/libarcsoft_beautyshot.so, lib/libarcsoft_high_dynamic_range.so, lib64/libarcsoft_high_dynamic_range.so, vendor/lib/libDepthBokehEffect.so, vendor/lib64/libDepthBokehEffect.so, vendor/lib/libDepthBokehEffectBase.so, vendor/lib64/libDepthBokehEffectBase.so.
-# Исключено: init.mal.rc, init.wod.rc, libcurl.so, libdrmclearkeyplugin.so, libmockdrmcryptoplugin.so.
-# NEEDED пропатчены по meizu-fleet/wt/device_M6T_treble/shims/wiring.txt (133 файлов).
-# Байты кода заменены по meizu-fleet/wt/device_M6T_treble/shims/bytepatch.txt (4 мест в 2 файлах).
-# Каждый dst system/vendor/<x> и system/<x> переписан в $(TARGET_COPY_OUT_VENDOR)/<x>.
-# Файлы лежат в device/meizu/M6T/proprietary/ (в .gitignore), sha256 — в device/meizu/M6T/proprietary/SHA256SUMS.
+# Board-specific vendor copy rules. Keep destination paths aligned with the vendor image.
 
 PRODUCT_COPY_FILES += \
     device/meizu/M6T/proprietary/bin/MPED:$(TARGET_COPY_OUT_VENDOR)/bin/MPED \

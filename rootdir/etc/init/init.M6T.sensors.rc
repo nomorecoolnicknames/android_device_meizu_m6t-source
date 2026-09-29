@@ -1,36 +1,4 @@
-# M6T (M811H) port, 2026-09-25: this file is the meizu_m6 draft (device/meizu/meizu_m6
-# d1e1ec9, audit meizu-fleet/designs/treble-m6-m6t/rootdir/INSTALL.txt) with names
-# meizu_m6 -> M6T. [DEV] citations of live:/stock: below are the M6's; the M6T stock
-# ramdisk (/srv/forge/m6t-dump/bootimg/ramdisk) was diffed against the M6 stock one and
-# only the differences listed in the design doc (§5.0) were applied. No M6T hardware.
-#
-# init.M6T.sensors.rc — MTK hwmsen sensor stack of the Meizu M6 on
-# Android 13: sysfs control nodes, the ST480 compass daemon, and the
-# sensors@1.0 service redefined with group input.
-#
-# Installed as /vendor/etc/init/init.M6T.sensors.rc — NOT in
-# /vendor/etc/init/hw and NOT imported from init.mt6755.rc: the `override`
-# below only wins if this file is parsed AFTER the AOSP
-# android.hardware.sensors@1.0-service.rc, and /vendor/etc/init is parsed in
-# sorted order ("init.M6T..." > "android.hardware...") after the hw/
-# imports [CONV m95:init.m95.sensors.rc:205-211].
-#
-# DRAFT (treble-m6-m6t design lane, 2026-09-25). Not booted yet. Not needed
-# for the first screen; it exists because the wall is already known.
-# Tags as in init.mt6755.rc.
-#
-# Sensors present (M6T_a13_defconfig:222-231): BMA253 accelerometer,
-# LTR578 als/ps, ST480 magnetometer (CONFIG_MTK_ST480_NEW=y), step counter;
-# no gyroscope, no barometer. Live input devices m_acc_input, m_alsps_input,
-# m_mag_input, hwmdata (live:60-input).
-#
-# Why the service override (FACT, blob:lib64/hw/sensors.mt6750.so strings):
-# the HAL reads samples from "/dev/input/event%d" (m_*_input devices), and
-# /dev/input/* is root:input 0660 (los20 system/core/rootdir/ueventd.rc). The
-# AOSP rc runs the service as system with "group system wakelock uhid
-# context_hub" — no input (los20 hardware/interfaces/sensors/1.0/default/
-# android.hardware.sensors@1.0-service.rc). m95 measured the result: sensors
-# register but never deliver an event [CONV m95:init.m95.sensors.rc:188-203].
+# M6T board init settings; preserve service identity and board-specific permissions.
 
 on post-fs-data
     # hwmsen misc-device control attributes the HAL writes on activate /

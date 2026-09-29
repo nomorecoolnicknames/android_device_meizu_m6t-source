@@ -1,14 +1,4 @@
-# system.prop - Meizu M6T (M6T / M811H), MT6750, LineageOS 20 (Android 13)
-#
-# BENCH TREE - no M6T hardware exists in this project and nothing here has been
-# observed on a running device. Values are FACT about the factory dump
-# (/srv/forge/m6t-dump) or INFERENCE from the sibling M6, and say which.
-#
-# The ~60-key MTK modem block and the ~20-key debug.sf.* block that the existing
-# LOS15.1 M6T system.prop inherited from M6 are NOT copied. Every one of those
-# was set while debugging an Oreo display/RIL problem on an M6 body; carrying
-# them to a device that has never booted, on an Android version they were never
-# tested against, would be cargo cult twice over.
+# Properties required before mount_all must be available in the early property set.
 
 #
 # 2026-09-25 (Treble): everything the VENDOR side owns - density, RIL, hw

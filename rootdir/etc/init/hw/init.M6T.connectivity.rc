@@ -1,28 +1,4 @@
-# M6T (M811H) port, 2026-09-25: this file is the meizu_m6 draft (device/meizu/meizu_m6
-# d1e1ec9, audit meizu-fleet/designs/treble-m6-m6t/rootdir/INSTALL.txt) with names
-# meizu_m6 -> M6T. [DEV] citations of live:/stock: below are the M6's; the M6T stock
-# ramdisk (/srv/forge/m6t-dump/bootimg/ramdisk) was diffed against the M6 stock one and
-# only the differences listed in the design doc (§5.0) were applied. No M6T hardware.
-#
-# init.M6T.connectivity.rc — MT6755 CONSYS (Wi-Fi/BT/GPS/FM) and GPS
-# daemons for the Meizu M6 on Android 13.
-# Installed as /vendor/etc/init/hw/init.M6T.connectivity.rc, imported by
-# init.mt6755.rc.
-#
-# DRAFT (treble-m6-m6t design lane, 2026-09-25). Not booted yet.
-# Tags as in init.mt6755.rc.
-#
-# Chip: integrated CONSYS, mediatek.wlan.chip=CONSYS_MT6755 (live:71-wmt);
-# CONFIG_MTK_COMBO_CHIP_CONSYS_6755=y (M6T_a13_defconfig:236).
-# Firmware in /vendor/firmware (vendor-blobs.mk): WMT_SOC.cfg,
-# ROMv2_lm_patch_1_{0,1}_hdr.bin, WIFI_RAM_CODE_6755, wifi_fw.cfg; AOSP
-# ueventd searches /vendor/firmware/ for request_firmware
-# (los20 system/core/rootdir/ueventd.rc:4).
-# Device-node permissions (stpwmt, wmtdetect, wmtWifi, stpbt, stpgps, gps,
-# fm, ttyMT2) are in ueventd.mt6755.rc.
-# wpa_supplicant is NOT here: the tree already defines it in
-# /vendor/etc/init/init.M6T.wifi.rc (AIDL name), and init keeps only one
-# definition of a service name.
+# M6T board init settings; preserve ordering relative to common MT6755 services.
 
 on post-fs-data
     # GPS power-control sysfs [DEV stock:init.connectivity.rc:20-24,

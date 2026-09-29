@@ -1,34 +1,4 @@
-# M6T (M811H) port, 2026-09-25: this file is the meizu_m6 draft (device/meizu/meizu_m6
-# d1e1ec9, audit meizu-fleet/designs/treble-m6-m6t/rootdir/INSTALL.txt) with names
-# meizu_m6 -> M6T. [DEV] citations of live:/stock: below are the M6's; the M6T stock
-# ramdisk (/srv/forge/m6t-dump/bootimg/ramdisk) was diffed against the M6 stock one and
-# only the differences listed in the design doc (§5.0) were applied. No M6T hardware.
-#
-# init.M6T.thermal.rc — MTK thermal daemons for the Meizu M6 on
-# Android 13. Installed as /vendor/etc/init/hw/init.M6T.thermal.rc,
-# imported by init.mt6755.rc.
-#
-# DRAFT (treble-m6-m6t design lane, 2026-09-25). Not booted yet.
-# Tags as in init.mt6755.rc.
-#
-# Two layers, as on m95 [CONV m95:init.m95.thermal.rc:136-165]: the kernel
-# (mtktscpu & co., zones seen live: mtktscpu, mtktsbattery, mtktspmic,
-# mtktswmt, mtktsAP, mtktsbtsmdpa — live:80-thermal) protects the SoC on its
-# own; the daemons below apply the product policy.
-#
-# FACT, and a gap outside this file: thermal_manager loads the policy through
-# libmtcloader from /vendor/etc/.tp/thermal.conf and /vendor/etc/.tp/.%s
-# (strings of blob:bin/thermal_manager and lib/libmtcloader.so), and NEITHER
-# the Treble vendor-blobs.mk NOR the los16 blob list ships a single
-# etc/.tp file. Until the policy is imported, thermal_manager has nothing to
-# load and the device runs on kernel protection only (INSTALL.txt H-THM1).
-# /data/.tp (libmtcloader's /data/.tp/.settings) is created in
-# init.mt6755.rc, post-fs-data.
-#
-# Definitions: [DEV stock:init.mt6755.rc:1411-1431; live:00-getprop
-# init.svc.thermal/thermald/thermalloadalgod running, thermal_manager
-# stopped (= oneshot finished)]. Bitness: thermal, thermal_manager and
-# thermalloadalgod are 32-bit, thermald 64-bit (file(1) on the blobs).
+# M6T board init settings; preserve service identity and board-specific permissions.
 
 service thermalloadalgod /vendor/bin/thermalloadalgod
     class main
